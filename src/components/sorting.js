@@ -10,16 +10,16 @@ export function initSorting(columns) {
             field = action.dataset.field;
             order = action.dataset.value;
 
-            columns.forEach(column => {
+            columns.forEach((column) => {
                 if (column.dataset.field !== action.dataset.field) {
                     column.dataset.value = 'none';
                 }
             });
         } else {
-            columns.forEach(column => {
+            columns.forEach((column) => {
                 if (column.dataset.value !== 'none') {
-                field = column.dataset.field;
-                order = column.dataset.value;
+                    field = column.dataset.field;
+                    order = column.dataset.value;
                 }
             });
         }
