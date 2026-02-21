@@ -72,11 +72,11 @@ const applySorting = initSorting([
     sampleTable.header.elements.sortByTotal
 ]);
 
+const applySearching = initSearching('search');
+
 const applyFiltering = initFiltering(sampleTable.filter.elements, {
     searchBySeller: indexes.sellers
 });
-
-const applySearching = initSearching('search');
 
 const appRoot = document.querySelector('#app');
 appRoot.appendChild(sampleTable.container);

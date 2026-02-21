@@ -9,7 +9,7 @@ export const initPagination = ({pages, fromRow, toRow, totalRows}, createPage) =
         const pageCount = Math.ceil(data.length / rowsPerPage); 
         let page = state.page;     
 
-        if (action) 
+        if (action) {
             switch(action.name) {
                 case 'prev': 
                     page = Math.max(1, page - 1); 
@@ -24,6 +24,7 @@ export const initPagination = ({pages, fromRow, toRow, totalRows}, createPage) =
                     page = pageCount; 
                     break;
             }
+        }
 
         const visiblePages = getPages(page, pageCount, 5);
         pages.replaceChildren(...visiblePages.map(pageNumber => {
