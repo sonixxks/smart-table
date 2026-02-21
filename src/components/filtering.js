@@ -34,6 +34,10 @@ export function initFiltering(elements, indexes) {
                 }
             }
         }
+        state.total = [
+            state.totalFrom ? Number(state.totalFrom.replace(/\s/g, "")) : undefined,
+            state.totalTo ? Number(state.totalTo.replace(/\s/g, "")) : undefined
+        ];
 
         return data.filter(row => compare(row, state));
     }
