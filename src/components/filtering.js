@@ -1,34 +1,49 @@
-import {createComparison, defaultRules} from "../lib/compare.js";
+export function initFiltering(elements) {
+    const updateIndexes = (elements, indexes) => {
+        Object.keys(indexes).forEach((elementName) => {
+            elements[elementName].append(...Object.values(indexes[elementName]).map(name => {
+                const el = document.createElement('option');
+                el.textContent = name;
+                el.value = name;
+                return el;
+            }))
+        })
+    }
 
-const compare = createComparison(defaultRules);
+    const applyFiltering = (query, state, action) => {
+        const filtersContainer = document.querySelector('.filter-row');
 
-export function initFiltering(elements, indexes) {
-    Object.keys(indexes)                                   
-      .forEach((elementName) => {                        
-        elements[elementName].append(                    
-            ...Object.values(indexes[elementName])        
-                      .map(name => {         
-                        const option = document.createElement('option');
-                        option.value = name;
-                        option.textContent = name;               
-                        return option;                               
-                      })
-        )
-     })
+        filtersContainer.addEventListener('click', async (event) => {
+            const button = event.target.closest('button');
+            if (!button) return;
+            if (button.name !== 'clear') return;
+            
+            const label = button.closest('label');
+            const input = label.querySelector('input');
+            if (input) input.value = '';
+            
+            const field = button.dataset.field;
+            if (field && field in state) {
+                state[field] = '';
+            }
+            
+            await render();
+        });
 
-    return (data, state, action) => {
-        const preparedState = { ...state};
+        const filter = {};
+        Object.keys(elements).forEach(key => {
+            if (elements[key]) {
+                if (['INPUT', 'SELECT'].includes(elements[key].tagName) && elements[key].value) { 
+                    filter[`filter[${elements[key].name}]`] = elements[key].value;
+                }
+            }
+        })
 
-        if(state.totalFrom || state.totalTo) {
-          preparedState.total = [
-            state.totalFrom ? Number(state.totalFrom) : undefined,
-            state.totalTo ? Number(state.totalTo) : undefined
-          ];
-        }
+        return Object.keys(filter).length ? Object.assign({}, query, filter) : query;
+    }
 
-        delete preparedState.totalFrom;
-        delete preparedState.totalTo;
-
-        return data.filter(row => compare(row, preparedState));
+    return {
+        updateIndexes,
+        applyFiltering
     }
 }
