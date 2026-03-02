@@ -15,8 +15,9 @@ export function initFiltering(elements) {
 
         filtersContainer.addEventListener('click', async (event) => {
             const button = event.target.closest('button');
-            if (!button) return;
-            if (button.name !== 'clear') return;
+            if (!button ||button.name !== 'clear') return;
+
+            event.preventDefault(); 
             
             const label = button.closest('label');
             const input = label.querySelector('input');
@@ -29,11 +30,11 @@ export function initFiltering(elements) {
             
             await render();
         });
-
+        
         const filter = {};
         Object.keys(elements).forEach(key => {
             if (elements[key]) {
-                if (['INPUT', 'SELECT'].includes(elements[key].tagName) && elements[key].value) { 
+                if (['INPUT', 'SELECT'].includes(elements[key].tagName) && elements[key].value) {
                     filter[`filter[${elements[key].name}]`] = elements[key].value;
                 }
             }
